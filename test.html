@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>TWA Communication Test</title>
+  <script>
+    // Listen for messages from Android app
+    window.addEventListener('message', (event) => {
+      console.log("Message from Android:", event.data);
+      document.getElementById('from-android').textContent = event.data;
+    });
+
+    // Send message to Android
+    function sendToAndroid() {
+      if (window.postMessage) {
+        window.postMessage("Hello from Web!", "*");
+      } else {
+        alert("postMessage not supported");
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>TWA Communication Test</h1>
+  <button onclick="sendToAndroid()">Send Message to Android</button>
+  <p><strong>Received from Android:</strong> <span id="from-android">Nothing yet</span></p>
+</body>
+</html>
