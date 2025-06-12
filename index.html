@@ -4,20 +4,30 @@
   <meta charset="UTF-8">
   <title>TWA Communication Test</title>
   <script>
-    // Listen for messages from Android app
-    window.addEventListener('message', (event) => {
-      console.log("Message from Android:", event.data);
+    // Message from Android app via Service Worker
+    navigator.serviceWorker.addEventListener('message', event => {
+      console.log("Message from Android (via Service Worker):", event.data);
       document.getElementById('from-android').textContent = event.data;
     });
 
-    // Send message to Android
+    // Send message to Android app (if supported)
     function sendToAndroid() {
-      if (window.postMessage) {
-        window.postMessage("Hello from Web!", "*");
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage("Hello from Web!");
       } else {
-        alert("postMessage not supported");
+        alert("Service Worker not ready");
       }
     }
+
+    // Register Service Worker
+    window.addEventListener('load', async () => {
+      try {
+        await navigator.serviceWorker.register('sw.js');
+        console.log("Service Worker registered");
+      } catch (e) {
+        console.error("Service Worker registration failed:", e);
+      }
+    });
   </script>
 </head>
 <body>
