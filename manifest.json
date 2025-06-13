@@ -1,0 +1,9 @@
+{
+  "name": "TWA Messaging Demo",
+  "short_name": "TWA Demo",
+  "start_url": "/test-html/",
+  "display": "standalone",
+  "scope": "/test-html/",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff"
+}
