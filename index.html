@@ -4,13 +4,29 @@
   <meta charset="UTF-8">
   <title>TWA Communication Test</title>
   <script>
-    // Message from Android app via Service Worker
+    // 1. Listen for postMessage from Android (via MessagePort)
+    window.addEventListener("message", (event) => {
+      const port = event.ports[0];
+      if (!port) {
+        console.warn("No port received from Android");
+        return;
+      }
+
+      port.onmessage = (e) => {
+        console.log("Message from Android (via MessagePort):", e.data);
+        document.getElementById('from-android').textContent = e.data;
+      };
+
+      port.postMessage("ACK from Web page");
+    });
+
+    // 2. Listen via Service Worker (only works if Android sends message to SW)
     navigator.serviceWorker.addEventListener('message', event => {
       console.log("Message from Android (via Service Worker):", event.data);
       document.getElementById('from-android').textContent = event.data;
     });
 
-    // Send message to Android app (if supported)
+    // 3. Send message from Web to Android via Service Worker
     function sendToAndroid() {
       if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage("Hello from Web!");
@@ -19,7 +35,7 @@
       }
     }
 
-    // Register Service Worker
+    // 4. Register Service Worker
     window.addEventListener('load', async () => {
       try {
         await navigator.serviceWorker.register('sw.js');
